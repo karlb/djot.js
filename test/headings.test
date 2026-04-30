@@ -72,6 +72,18 @@ lazy</h1>
 ```
 
 ```
+# h
+#
+# x
+.
+<section id="h-x">
+<h1>h
+
+x</h1>
+</section>
+```
+
+```
 # Heading
 lazy
 # more

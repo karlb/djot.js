@@ -207,6 +207,17 @@ class EventParser {
           if (m && container.extra.level === (m.endpos - m.startpos + 1) &&
             find(this.subject, pattWhitespace, m.endpos + 1)) {
             this.pos = m.endpos + 1;
+            // A bare `#` line (just the bangs followed by EOL, possibly
+            // with trailing spaces) is a heading continuation with no
+            // text. Feed the EOL to the inline parser so the soft_break
+            // between the surrounding lines is preserved.
+            let p = this.pos;
+            while (isSpaceOrTab(this.subject.codePointAt(p))) p++;
+            if (p === this.starteol && container.inlineParser) {
+              container.inlineParser.feed(this.starteol, this.endeol);
+              this.pos = this.endeol;
+              this.finishedLine = true;
+            }
             return true;
           } else {
             return false;

@@ -1085,12 +1085,13 @@ class EventParser {
                 }
                 self.addMatch(startpos, self.endeol, "str");
               } else if (tip && tip.content === ContentType.Inline &&
-                (!isBlank || !newStarts) && tip.inlineParser) {
-                // Feed on blank lines too when the container wasn't just
-                // opened on this line: para/caption close themselves on
-                // blank lines via their `continue`, so a surviving Inline
-                // tip on a blank line is a continued heading whose `#`
-                // line should still emit a soft_break.
+                tip.inlineParser && !(isBlank && newStarts)) {
+                // Mirror the Block branch's blank-line handling: skip
+                // only when the container was just opened on this line.
+                // For a continued Inline container (heading) on a blank
+                // line, feeding the EOL emits the soft_break that joins
+                // continuation lines. (Para/caption never reach here on
+                // blank lines because their `continue` returns false.)
                 tip.inlineParser.feed(self.pos, self.endeol);
               }
             }

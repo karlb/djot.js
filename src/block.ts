@@ -207,17 +207,6 @@ class EventParser {
           if (m && container.extra.level === (m.endpos - m.startpos + 1) &&
             find(this.subject, pattWhitespace, m.endpos + 1)) {
             this.pos = m.endpos + 1;
-            // A bare `#` line (just the bangs followed by EOL, possibly
-            // with trailing spaces) is a heading continuation with no
-            // text. Feed the EOL to the inline parser so the soft_break
-            // between the surrounding lines is preserved.
-            let p = this.pos;
-            while (isSpaceOrTab(this.subject.codePointAt(p))) p++;
-            if (p === this.starteol && container.inlineParser) {
-              container.inlineParser.feed(this.starteol, this.endeol);
-              this.pos = this.endeol;
-              this.finishedLine = true;
-            }
             return true;
           } else {
             return false;
@@ -1096,7 +1085,12 @@ class EventParser {
                 }
                 self.addMatch(startpos, self.endeol, "str");
               } else if (tip && tip.content === ContentType.Inline &&
-                !isBlank && tip.inlineParser) {
+                (!isBlank || !newStarts) && tip.inlineParser) {
+                // Feed on blank lines too when the container wasn't just
+                // opened on this line: para/caption close themselves on
+                // blank lines via their `continue`, so a surviving Inline
+                // tip on a blank line is a continued heading whose `#`
+                // line should still emit a soft_break.
                 tip.inlineParser.feed(self.pos, self.endeol);
               }
             }

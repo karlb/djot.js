@@ -17,7 +17,7 @@ const warn = function(warning: Warning) : void {
 }
 
 let timing = false;
-const options = {sourcePositions: false, warn: warn};
+const options = {sourcePositions: false, blocksInterruptParagraphs: false, warn: warn};
 let to = 'html';
 let from = 'djot';
 let compact = false;
@@ -35,6 +35,8 @@ Options:
   --compact            Use compact (rather than pretty) JSON
   --width,-w NUMBER    Wrap width for djot output (-1 = compact, 0 = no wrap)
   --sourcepos,-p       Include source positions
+  --interrupt          Let block constructs interrupt a paragraph, so no
+                       blank line is needed before a list, quote, etc.
   --time               Print parse time to stderr
   --quiet,-q           Suppress warnings
   --version            Print djot version
@@ -101,6 +103,9 @@ while (args[i]) {
     case "--sourcepos":
     case "-p":
       options.sourcePositions = true;
+      break;
+    case "--interrupt":
+      options.blocksInterruptParagraphs = true;
       break;
     case "--time":
       timing = true;

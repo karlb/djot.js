@@ -1011,6 +1011,14 @@ class EventParser {
             let isBlank = (self.pos === self.starteol);
             let newStarts = false;
             let lastMatch = self.containers[self.lastMatchedContainer];
+            // A block-level construct may interrupt an open paragraph (no
+            // blank line required). Check block starts against the
+            // paragraph's parent (undefined at the top level); if one opens,
+            // addContainer closes the paragraph and the block takes its place.
+            if (self.options.blocksInterruptParagraphs &&
+                lastMatch && lastMatch.name === "para") {
+              lastMatch = self.containers[self.lastMatchedContainer - 1];
+            }
             let checkStarts = !isBlank &&
               (!lastMatch ||
                 lastMatch.content === ContentType.Block ||

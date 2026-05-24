@@ -26,6 +26,11 @@ class Warning {
 
 interface Options {
   warn?: (warning : Warning) => void;
+  // Allow block-level constructs (lists, block quotes, headings, etc.) to
+  // interrupt a paragraph, so no blank line is required before them. This
+  // trades away hard-wrap friendliness (design goal #7) but preserves the
+  // other goals, including uniform composition (#8).
+  blocksInterruptParagraphs?: boolean;
 }
 
 export type {

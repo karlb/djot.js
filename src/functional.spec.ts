@@ -1,4 +1,4 @@
-import { parse, renderAST } from "./parse";
+import { parse, renderAST, ParseOptions } from "./parse";
 import { renderHTML } from "./html";
 
 const ignoreWarnings = () => { /* do nothing */ };
@@ -28,7 +28,8 @@ const testfiles = [
   "tables.test",
   "task_lists.test",
   "thematic_breaks.test",
-  "verbatim.test"
+  "verbatim.test",
+  "para_interrupt.test"
 ];
 
 type Filter = string;
@@ -115,10 +116,13 @@ testfiles.forEach((file: string) => {
     const tests = parseTests(fp);
     tests.forEach((test: Test) => {
       it("line " + test.linenum, () => {
-        const options = { sourcePositions: false,
+        const options : ParseOptions = { sourcePositions: false,
                         warn: ignoreWarnings };
         if (test.options.match(/p/)) {
           options.sourcePositions = true;
+        }
+        if (test.options.match(/i/)) {
+          options.blocksInterruptParagraphs = true;
         }
         const ast = parse(test.input, options);
         let result;

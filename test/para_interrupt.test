@@ -1,0 +1,106 @@
+With the `blocksInterruptParagraphs` option, a block-level construct may
+interrupt a paragraph, so no blank line is required before it. The `i` flag
+enables the option. This trades away hard-wrap friendliness (design goal #7)
+but keeps the other goals, including uniform composition (#8).
+
+A list may follow a paragraph with no blank line:
+
+```i
+hello
+- a
+- b
+.
+<p>hello</p>
+<ul>
+<li>
+a
+</li>
+<li>
+b
+</li>
+</ul>
+```
+
+A sublist needs no blank line either; indentation alone determines nesting:
+
+```i
+- a
+  - b
+  - c
+.
+<ul>
+<li>
+a
+<ul>
+<li>
+b
+</li>
+<li>
+c
+</li>
+</ul>
+</li>
+</ul>
+```
+
+Uniform composition (goal #8): the identical sequence above, placed inside a
+block quote, produces the identical nested structure. This is the case that
+CommonMark gets wrong (commonmark/commonmark-spec#634).
+
+```i
+> - a
+>   - b
+>   - c
+.
+<blockquote>
+<ul>
+<li>
+a
+<ul>
+<li>
+b
+</li>
+<li>
+c
+</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+```
+
+Plain consecutive lines (no block marker) still form a single paragraph with a
+soft break; only block markers interrupt:
+
+```i
+this is a
+wrapped paragraph
+.
+<p>this is a
+wrapped paragraph</p>
+```
+
+A block quote may follow a paragraph with no blank line:
+
+```i
+text
+> quote
+.
+<p>text</p>
+<blockquote>
+<p>quote</p>
+</blockquote>
+```
+
+The cost of dropping goal #7: a line that looks like a list marker starts a
+list. This is consistent in all contexts; it is only surprising when
+hard-wrapping, which this option does not aim to support.
+
+```i
+1865.
+.
+<ol start="1865">
+<li>
+</li>
+</ol>
+```

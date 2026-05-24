@@ -77,10 +77,12 @@ function initializeFromURL() {
     const filter = query.get("filter") || "";
     const mode = query.get("mode") || "preview";
     const sourcepos = query.get("sourcepos") !== "false";
+    const interrupt = query.get("interrupt") === "true";
     document.getElementById("input").value = input;
     document.getElementById("filter").value = filter;
     document.getElementById("mode").value = mode;
     document.getElementById("sourcepos").checked = sourcepos;
+    document.getElementById("interrupt").checked = interrupt;
   }
 }
 
@@ -91,6 +93,7 @@ window.onload = () => {
   input.onscroll = syncScroll;
   document.getElementById("mode").onchange = parse_and_render;
   document.getElementById("sourcepos").onchange = parse_and_render;
+  document.getElementById("interrupt").onchange = parse_and_render;
 
   document.getElementById("filter-examples").onchange = (e) => {
     let examp = filterExamples[e.target.value];
@@ -176,9 +179,10 @@ function parse_and_render() {
   // always enable source positions for preview as they are needed for scroll
   // sync and are not visible anyway
   const sourcepos = document.getElementById("sourcepos").checked || mode == "preview";
+  const interrupt = document.getElementById("interrupt").checked;
   try {
     var startTime = new Date().getTime();
-    ast = djot.parse(text, { sourcePositions: sourcepos, warn: ignoreWarnings });
+    ast = djot.parse(text, { sourcePositions: sourcepos, blocksInterruptParagraphs: interrupt, warn: ignoreWarnings });
     if (filter) {
       try {
         let filterprog = `"use strict"; return ( function() { ${filter} } );`;
@@ -211,6 +215,7 @@ function render() {
   document.getElementById("result").innerHTML = "";
   const result = document.getElementById("result");
   const sourcepos = document.getElementById("sourcepos").checked;
+  const interrupt = document.getElementById("interrupt").checked;
 
   if (mode == "astjson") {
     result.innerText = JSON.stringify(ast, null, 2);
@@ -239,6 +244,9 @@ function render() {
   }
   if (!sourcepos) {
     paramslist.push(["sourcepos","false"]);
+  }
+  if (interrupt) {
+    paramslist.push(["interrupt","true"]);
   }
   if (filter) {
     paramslist.push(["filter",filter]);

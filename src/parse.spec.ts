@@ -292,6 +292,12 @@ describe("Parser", () => {
 `);
   });
 
+  it("warns for unattached attributes at the start of a paragraph", () => {
+    const warnings : string[] = [];
+    parse("{.a} foo\n", {warn: (w) => warnings.push(w.render())});
+    expect(warnings).toEqual(["Ignoring unattached attribute at offset 3"]);
+  });
+
 
 
 });

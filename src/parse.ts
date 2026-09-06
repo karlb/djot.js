@@ -449,9 +449,14 @@ const parseFromEvents = function(events: Event[],
           if (node.attributes.id) {
             identifiers[node.attributes.id] = true;
           }
+          const warnUnattached = () =>
+            warn(new Warning("Ignoring unattached attribute",
+                          options.sourcePositions ?
+                            getSourceLoc(startpos) : startpos));
           let tip = getTip();
           if (tip === topContainer()) {
             // no inline children to add the attribute to...
+            warnUnattached();
             return;
           }
           let endsWithSpace = false;
@@ -485,9 +490,7 @@ const parseFromEvents = function(events: Event[],
           }
           tip = getTip(); // get new tip, which may be the new element
           if (endsWithSpace) {
-            warn(new Warning("Ignoring unattached attribute",
-                          options.sourcePositions ?
-                            getSourceLoc(startpos) : startpos));
+            warnUnattached();
             return;
           }
           if (!tip.attributes) {

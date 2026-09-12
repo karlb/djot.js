@@ -82,6 +82,19 @@ lazy</p>
 </blockquote>
 ```
 
+A quoted line that opens a block of its own leaves nothing for a
+later line to continue:
+
+```
+> ***
+lazy
+.
+<blockquote>
+<hr>
+</blockquote>
+<p>lazy</p>
+```
+
 ```
 > nested
 >

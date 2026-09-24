@@ -199,29 +199,6 @@ one
 </blockquote>
 ```
 
-Lazy continuation continues a paragraph. An item whose marker line is
-bare has none, so the next unindented line ends the list; an indented
-one is still the item's content:
-
-```
--
-next
-
--
-  next
-.
-<ul>
-<li>
-</li>
-</ul>
-<p>next</p>
-<ul>
-<li>
-next
-</li>
-</ul>
-```
-
 A paragraph opened after a blank line inside the item takes lazy
 continuation like the first one:
 

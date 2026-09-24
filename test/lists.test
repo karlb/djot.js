@@ -215,8 +215,7 @@ x
 </ul>
 ```
 
-A tight item still holds blocks, so one that opens with a fence is
-not a paragraph of literal text:
+Items in a tight list can contain non-paragraph blocks:
 
 ```
 - ~~~
@@ -271,8 +270,7 @@ c
 </ul>
 ```
 
-The same for an ordered list, where the blank line after `a.` is not
-between two of the first list's items and does not loosen it:
+A blank line between two lists doesn't make either of them loose:
 
 ```
 1. A
@@ -665,7 +663,7 @@ b
 </ol>
 ```
 
-That holds for a list of one item too:
+A lone `i.` could be roman 1 or alphabetic 9. Roman wins:
 
 ```
 i. one

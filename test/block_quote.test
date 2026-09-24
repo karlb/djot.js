@@ -82,8 +82,8 @@ lazy</p>
 </blockquote>
 ```
 
-A quoted line that opens a block of its own leaves nothing for a
-later line to continue:
+A thematic break is closed at once, so a later line has nothing to
+continue:
 
 ```
 > ***
